@@ -1,4 +1,4 @@
-import { Hand, Winner, WINS } from './wins';
+import { Hand, Winner, GetWinner } from './getWinner';
 
 function getRankValue(rank: string) {
   const ranks = '2345678910JQKA';
@@ -146,52 +146,52 @@ function tieBreakerWithArray(
   return { text: `It's a tie`, winner: 0 };
 }
 
-export function handleTieBreaker(
+export function getTieBreakerWinner(
   handOne: any,
   handTwo: any,
   name: string
 ): Winner {
   switch (name) {
-    case WINS.ROYAL_FLUSH.name:
+    case GetWinner.ROYAL_FLUSH.name:
       return { text: 'SPLIT POT, ROYAL FLUSH', winner: 0 };
-    case WINS.STRAIGHT_FLUSH.name:
-    case WINS.STRAIGHT.name:
+    case GetWinner.STRAIGHT_FLUSH.name:
+    case GetWinner.STRAIGHT.name:
       return tieBreakerResult(
         getHighestStraightCard(handOne),
         getHighestStraightCard(handTwo),
         name
       );
-    case WINS.FOUR_OF_A_KIND.name:
+    case GetWinner.FOUR_OF_A_KIND.name:
       return tieBreakerResult(
         getHigherOfAKindValue(handOne, 4),
         getHigherOfAKindValue(handTwo, 4),
         name
       );
-    case WINS.FULL_HOUSE.name:
+    case GetWinner.FULL_HOUSE.name:
       return tieBreakerResult(
         getHigherFullHouseValue(handOne),
         getHigherFullHouseValue(handTwo),
         name
       );
-    case WINS.FLUSH.name:
+    case GetWinner.FLUSH.name:
       return tieBreakerResult(
         getHigherFlushValue(handOne),
         getHigherFlushValue(handTwo),
         name
       );
-    case WINS.THREE_OF_A_KIND.name:
+    case GetWinner.THREE_OF_A_KIND.name:
       return tieBreakerResult(
         getHigherOfAKindValue(handOne, 3),
         getHigherOfAKindValue(handTwo, 3),
         name
       );
-    case WINS.TWO_PAIR.name:
+    case GetWinner.TWO_PAIR.name:
       return tieBreakerResult(
         getHigherTwoPairValue(handOne),
         getHigherTwoPairValue(handTwo),
         name
       );
-    case WINS.PAIR.name:
+    case GetWinner.PAIR.name:
       return tieBreakerResult(
         getHigherPairValue(handOne),
         getHigherPairValue(handTwo),

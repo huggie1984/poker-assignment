@@ -1,17 +1,32 @@
 const fs = require('fs');
 
-// Read the content of the file
-fs.readFile('data.txt', 'utf8', (err, data) => {
+fs.readFile('./bin/resources/poker.txt', 'utf8', (err, data) => {
+  if (err) {
+    console.error('Error reading the file:', err);
+    return;
+  }
+
+  const lines = data.split('\n');
+
+  const dataArray = lines.map((line) => {
+    const hand = line.trim().split(/\s+/);
+    return {
+      handOne: hand.slice(0, hand.length / 2),
+      handTwo: hand.slice(hand.length / 2),
+    };
+  });
+
+  const arrayAsString = `export const hands:  { handOne: string[]; handTwo: string[] }[] = ${JSON.stringify(
+    dataArray,
+    null,
+    2
+  )};\n`;
+
+  fs.writeFile('./src/utils/hands.ts', arrayAsString, 'utf8', (err) => {
     if (err) {
-        console.error('Error reading the file:', err);
-        return;
+      console.error('Error writing the file:', err);
+      return;
     }
-
-    // Split the content by lines
-    const lines = data.split('\n');
-
-    // Convert lines to an array of arrays
-    const dataArray = lines.map(line => line.trim().split(/\s+/).map(Number));
-
-    console.log(dataArray);
+    console.log('File written successfully.');
+  });
 });

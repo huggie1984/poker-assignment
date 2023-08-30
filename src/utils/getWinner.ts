@@ -1,4 +1,4 @@
-import { handleTieBreaker } from './tieBreaker';
+import { getTieBreakerWinner } from './getTieBreakerWinner';
 
 export type Hand = string[];
 export type Winner = {
@@ -7,7 +7,7 @@ export type Winner = {
 };
 
 const suits = ['C', 'D', 'H', 'S'];
-export const WINS = {
+export const GetWinner = {
   ROYAL_FLUSH: { name: 'ROYAL FLUSH', rank: 10 },
   STRAIGHT_FLUSH: { name: 'STRAIGHT FLUSH', rank: 9 },
   FOUR_OF_A_KIND: { name: 'FOUR OF A KIND', rank: 8 },
@@ -31,20 +31,20 @@ function hasAKind(hand: Hand) {
   return Object.values(valueCounts);
 }
 
-export function hasFourOfAKind(hand: Hand) {
+function hasFourOfAKind(hand: Hand) {
   return hasAKind(hand).includes(4);
 }
 
-export function hasFullHouse(hand: Hand) {
+function hasFullHouse(hand: Hand) {
   const values = hasAKind(hand);
   return values.includes(3) && values.includes(2);
 }
 
-export function hasThreeOfAKind(hand: Hand) {
+function hasThreeOfAKind(hand: Hand) {
   return hasAKind(hand).includes(3);
 }
 
-export function hasTwoPair(hand: Hand) {
+function hasTwoPair(hand: Hand) {
   const values = hasAKind(hand);
   let count = 0;
   for (const number of values) {
@@ -55,12 +55,12 @@ export function hasTwoPair(hand: Hand) {
   return count === 2;
 }
 
-export function hasPair(hand: Hand) {
+function hasPair(hand: Hand) {
   const values = hasAKind(hand);
   return values.includes(2);
 }
 
-export function hasRoyalFlush(hand: Hand) {
+function hasRoyalFlush(hand: Hand) {
   const royalValues = ['T', 'J', 'Q', 'K', 'A'];
   for (const suit of suits) {
     const suitCards = hand.filter((card) => card.endsWith(suit));
@@ -76,7 +76,7 @@ export function hasRoyalFlush(hand: Hand) {
   return false;
 }
 
-export function hasStraightFlush(hand: Hand) {
+function hasStraightFlush(hand: Hand) {
   return hasFlush(hand) && hasStraight(hand);
 }
 
@@ -128,32 +128,32 @@ function hasStraight(hand: Hand) {
   return false;
 }
 
-export function checkHand(hand: Hand) {
+function checkHand(hand: Hand) {
   switch (true) {
     case hasRoyalFlush(hand):
-      return WINS.ROYAL_FLUSH;
+      return GetWinner.ROYAL_FLUSH;
     case hasStraightFlush(hand):
-      return WINS.STRAIGHT_FLUSH;
+      return GetWinner.STRAIGHT_FLUSH;
     case hasFourOfAKind(hand):
-      return WINS.FOUR_OF_A_KIND;
+      return GetWinner.FOUR_OF_A_KIND;
     case hasFullHouse(hand):
-      return WINS.FULL_HOUSE;
+      return GetWinner.FULL_HOUSE;
     case hasFlush(hand):
-      return WINS.FLUSH;
+      return GetWinner.FLUSH;
     case hasStraight(hand):
-      return WINS.STRAIGHT;
+      return GetWinner.STRAIGHT;
     case hasThreeOfAKind(hand):
-      return WINS.THREE_OF_A_KIND;
+      return GetWinner.THREE_OF_A_KIND;
     case hasTwoPair(hand):
-      return WINS.TWO_PAIR;
+      return GetWinner.TWO_PAIR;
     case hasPair(hand):
-      return WINS.PAIR;
+      return GetWinner.PAIR;
     default:
-      return WINS.NADA;
+      return GetWinner.NADA;
   }
 }
 
-export function compareHands(playerOneHand: any, playerTwoHand: any): Winner {
+export function getWinner(playerOneHand: any, playerTwoHand: any): Winner {
   const playerOneResult = checkHand(playerOneHand);
   const playerTwoResult = checkHand(playerTwoHand);
   if (playerOneResult.rank > playerTwoResult.rank) {
@@ -167,6 +167,10 @@ export function compareHands(playerOneHand: any, playerTwoHand: any): Winner {
       winner: 2,
     };
   } else {
-    return handleTieBreaker(playerOneHand, playerTwoHand, playerOneResult.name);
+    return getTieBreakerWinner(
+      playerOneHand,
+      playerTwoHand,
+      playerOneResult.name
+    );
   }
 }
