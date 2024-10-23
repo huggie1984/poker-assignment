@@ -51,65 +51,69 @@ function App({ hands = data }) {
   }, [autoPlayOn, currentHandIndex, hands.length]);
 
   const buttonClass =
-    'text-4xl rounded-3xl border border-amber-50 p-6 hover:bg-amber-100 hover:text-black';
+    'text-xl md:text-4xl rounded-3xl border border-amber-50 p-4 bg-amber-100 text-black hover:bg-transparent hover:text-amber-50';
 
   return (
-    <div className="bg-green-600 min-h-screen text-amber-50 flex flex-col gap-10 text-xl p-10">
-      <div className="flex gap-3 items-center">
-        <button
-          className={buttonClass}
-          onClick={() => {
-            const newIndex =
-              currentHandIndex + 1 < hands.length ? currentHandIndex + 1 : 0;
-            setCurrentHandIndex(newIndex);
-          }}
-        >
-          Deal Next Hand
-        </button>
-        <button
-          className={buttonClass}
-          onClick={() => setAutoPlayOn(!autoPlayOn)}
-        >
-          Autoplay {autoPlayOn ? 'OFF' : 'ON'}
-        </button>
-        <p className={'text-4xl p-6 font-bold'}>
+    <main className="bg-green-600 min-h-screen text-amber-50 p-4 md:p-8 flex justify-center">
+      <div className="flex flex-col justify-center items-center gap-10 max-w-[800px] w-full">
+        <p className="text-xl md:text-4xl font-bold">
           Game {currentHandIndex + 1} / {hands.length}
         </p>
-      </div>
+        <section className="flex gap-3 items-center">
+          <button
+            className={buttonClass}
+            onClick={() => {
+              const newIndex =
+                currentHandIndex + 1 < hands.length ? currentHandIndex + 1 : 0;
+              setCurrentHandIndex(newIndex);
+            }}
+          >
+            Deal
+          </button>
+          <button
+            className={buttonClass}
+            onClick={() => setAutoPlayOn(!autoPlayOn)}
+          >
+            Auto Deal {autoPlayOn ? 'OFF' : 'ON'}
+          </button>
+        </section>
 
-      <div className="flex flex-wrap gap-8">
-        <div className="w-[500px] border rounded p-3 flex flex-col gap-3">
-          <>
-            <h2>Player 1</h2>
-            <ul className="flex gap-3">
-              {hands[currentHandIndex].handOne.map((card: string) => (
-                <Card key={card} card={card} />
-              ))}
-            </ul>
-            win count: {results?.playerOne}
-          </>
-        </div>
+        <section className="flex flex-col gap-8 w-full">
+          <div className="border rounded p-3 flex flex-col gap-3 text-sm md:text-base">
+            <>
+              <h2>Player 1</h2>
+              <ul className="grid grid-cols-5 gap-3">
+                {hands[currentHandIndex].handOne.map((card: string) => (
+                  <Card key={card} card={card} />
+                ))}
+              </ul>
+              win count: {results?.playerOne}
+            </>
+          </div>
 
-        <div className="w-[500px] border rounded p-3 flex flex-col gap-3">
-          <>
-            <h2>Player 2</h2>
-            <ul className="flex gap-3">
-              {hands[currentHandIndex].handTwo.map((card: string) => (
-                <Card key={card} card={card} />
-              ))}
-            </ul>
-            win count: {results?.playerTwo}
-          </>
-        </div>
+          <div className="border rounded p-3 flex flex-col gap-3 text-sm md:text-base">
+            <>
+              <h2>Player 2</h2>
+              <ul className="grid grid-cols-5 gap-3">
+                {hands[currentHandIndex].handTwo.map((card: string) => (
+                  <Card key={card} card={card} />
+                ))}
+              </ul>
+              win count: {results?.playerTwo}
+            </>
+          </div>
+        </section>
+        <p className="text-xl md:text-4xl font-bold">{results?.winner}</p>
       </div>
-      <p className="text-4xl font-bold">{results?.winner}</p>
-    </div>
+    </main>
   );
 }
 
 const Card = ({ card }: { card: string }) => (
-  <li className="bg-white rounded-xl text-black w-[70px] h-[100px] md:w-[100px] md:h-[130px] flex items-center justify-center gap-1">
-    {card[0]} {suits[card.charAt(card.length - 1)]}
+  <li className="bg-white rounded-xl w-full h-0 pb-[150%] relative">
+    <div className="absolute inset-0 flex items-center justify-center gap-1 text-black text-xl md:text-3xl">
+      {card[0]} {suits[card.charAt(card.length - 1)]}
+    </div>
   </li>
 );
 
